@@ -28,6 +28,12 @@ public class CalcularRentabilidadeRestController {
                 .dataPrevisaoResgate(request.getDataPrevisaoResgate())
                 .build());
         return CalcularRentabilidadeRestResponse.builder()
+                .valorBruto(calculoRentabilidadeResponse.getValorBruto())
+                .valorLiquido(calculoRentabilidadeResponse.getValorLiquido())
+                .impostoDeRenda(calculoRentabilidadeResponse.getImpostoDeRenda())
+                .aliquotaImpostoRendaAplicada(calculoRentabilidadeResponse.getAliquotaImpostoRendaAplicada())
+                .iof(calculoRentabilidadeResponse.getIof())
+                .aliquotaIofAplicada(calculoRentabilidadeResponse.getAliquotaImpostoRendaAplicada())
                 .build();
     }
 }

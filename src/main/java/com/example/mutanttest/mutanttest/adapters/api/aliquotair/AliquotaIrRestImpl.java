@@ -5,6 +5,8 @@ import com.example.mutanttest.mutanttest.usecases.calculorentabilidade.dto.Aliqu
 import com.example.mutanttest.mutanttest.usecases.calculorentabilidade.dto.AliquotaIrRestResponse;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 public class AliquotaIrRestImpl implements AliquotaIrRest {
 
@@ -25,7 +27,7 @@ public class AliquotaIrRestImpl implements AliquotaIrRest {
             aliquotaIrFinal = 0.15D;
         }
         return AliquotaIrRestResponse.builder()
-                .valorAliquotaIr(aliquotaIrFinal)
+                .valorAliquotaIr(BigDecimal.valueOf(aliquotaIrFinal))
                 .build();
     }
 }

@@ -11,5 +11,7 @@ public class CalcularRentabilidadeRestResponse {
     private BigDecimal valorBruto;
     private BigDecimal valorLiquido;
     private BigDecimal impostoDeRenda;
+    private BigDecimal aliquotaImpostoRendaAplicada;
     private BigDecimal iof;
+    private BigDecimal aliquotaIofAplicada;
 }

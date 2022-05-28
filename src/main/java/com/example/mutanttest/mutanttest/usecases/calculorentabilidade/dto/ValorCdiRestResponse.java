@@ -7,7 +7,8 @@ import java.math.BigDecimal;
 
 @Builder
 @Getter
-public class AliquotaIrRestResponse {
+public class ValorCdiRestResponse {
 
-    private BigDecimal valorAliquotaIr;
+    private BigDecimal taxaDiaria;
+    private BigDecimal TaxaAnual;
 }
