@@ -63,6 +63,12 @@
 			<plugin>
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
+				<version>1.8.0</version>
+				<configuration>
+					<mutators>
+						<mutator>ALL</mutator>
+					</mutators>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

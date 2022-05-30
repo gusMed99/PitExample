@@ -13,7 +13,7 @@ public class ValorCdiRestImpl implements ValorCdiRest {
     @Override
     public ValorCdiRestResponse obterTaxaCdi() {
         return ValorCdiRestResponse.builder()
-                .TaxaAnual(BigDecimal.valueOf(0.1265))
+                .taxaAnual(BigDecimal.valueOf(0.1265))
                 .taxaDiaria(BigDecimal.valueOf(0.000331))
                 .build();
     }

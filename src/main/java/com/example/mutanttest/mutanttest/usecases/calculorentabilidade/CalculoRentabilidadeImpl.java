@@ -2,6 +2,7 @@ package com.example.mutanttest.mutanttest.usecases.calculorentabilidade;
 
 
 import com.example.mutanttest.mutanttest.usecases.calculorentabilidade.dto.*;
+import com.example.mutanttest.mutanttest.usecases.calculorentabilidade.exception.DadosInvalidosException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,15 @@ import java.time.temporal.ChronoUnit;
 @RequiredArgsConstructor
 public class CalculoRentabilidadeImpl implements CalculoRentabilidade {
 
+    public static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
+    public static final int PRECISAO_ARREDONDAMENTO = 2;
     private final AliquotaIofRest aliquotaIofRest;
     private final AliquotaIrRest aliquotaIrRest;
     private final ValorCdiRest valorCdiRest;
 
     @Override
     public CalculoRentabilidadeResponse obterCalculoRentabilidade(final CalculoRentabilidadeRequest request) {
+        this.validarDadosRecebidos(request);
         final int quantidadeDiasOperacao = (int) ChronoUnit.DAYS.between(request.getDataAplicacao(), request.getDataPrevisaoResgate());
         final AliquotaIofRestResponse aliquotaIofRestResponse = this.aliquotaIofRest.obterAliquotaIof(AliquotaIofRestRequest.builder()
                 .quantidadeDiasOperacao(quantidadeDiasOperacao)
@@ -41,12 +45,12 @@ public class CalculoRentabilidadeImpl implements CalculoRentabilidade {
 
 
         return CalculoRentabilidadeResponse.builder()
-                .valorBruto(brutoTotal)
-                .valorLiquido(brutoTotal.subtract(totalIof).subtract(totalIr))
-                .impostoDeRenda(totalIr)
-                .aliquotaImpostoRendaAplicada(aliquotaIrRestResponse.getValorAliquotaIr().multiply(BigDecimal.valueOf(100)))
-                .iof(totalIof)
-                .aliquotaIofAplicada(aliquotaIofRestResponse.getAliquotaIof())
+                .valorBruto(brutoTotal.setScale(PRECISAO_ARREDONDAMENTO, ROUNDING_MODE))
+                .valorLiquido(brutoTotal.subtract(totalIof).subtract(totalIr).setScale(PRECISAO_ARREDONDAMENTO,ROUNDING_MODE))
+                .impostoDeRenda(totalIr.setScale(PRECISAO_ARREDONDAMENTO, ROUNDING_MODE))
+                .aliquotaImpostoRendaAplicada(aliquotaIrRestResponse.getValorAliquotaIr().multiply(BigDecimal.valueOf(100)).setScale(PRECISAO_ARREDONDAMENTO,ROUNDING_MODE))
+                .iof(totalIof.setScale(PRECISAO_ARREDONDAMENTO,ROUNDING_MODE))
+                .aliquotaIofAplicada(aliquotaIofRestResponse.getAliquotaIof().setScale(PRECISAO_ARREDONDAMENTO,ROUNDING_MODE))
                 .build();
     }
 
@@ -54,7 +58,7 @@ public class CalculoRentabilidadeImpl implements CalculoRentabilidade {
                                           final int quantidadeDiasOperacao){
 
         final BigDecimal resultadoPotencia = rendimentoDiario.add(BigDecimal.valueOf(1)).pow(quantidadeDiasOperacao);
-        return valorInvestido.multiply(resultadoPotencia).setScale(2, RoundingMode.HALF_UP);
+        return valorInvestido.multiply(resultadoPotencia).setScale(PRECISAO_ARREDONDAMENTO, ROUNDING_MODE);
     }
 
     private BigDecimal calcularTotalIof(final BigDecimal rendimentoBruto, final BigDecimal aliquotaIof){
@@ -64,6 +68,13 @@ public class CalculoRentabilidadeImpl implements CalculoRentabilidade {
     private BigDecimal calcularTotalIr(final BigDecimal rendimentoBruto, final BigDecimal totalIof, final BigDecimal aliquotaIr){
         final BigDecimal burotDescontadoIof = rendimentoBruto.subtract(totalIof);
         return burotDescontadoIof.multiply(aliquotaIr);
+    }
+
+    private void validarDadosRecebidos(CalculoRentabilidadeRequest calculoRentabilidadeRequest){
+        if(calculoRentabilidadeRequest.getDataAplicacao().compareTo(calculoRentabilidadeRequest.getDataPrevisaoResgate()) >=0 ||
+           calculoRentabilidadeRequest.getValorInvestido().doubleValue()<=0D){
+            throw new DadosInvalidosException();
+        }
     }
 
 

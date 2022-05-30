@@ -10,5 +10,5 @@ import java.math.BigDecimal;
 public class ValorCdiRestResponse {
 
     private BigDecimal taxaDiaria;
-    private BigDecimal TaxaAnual;
+    private BigDecimal taxaAnual;
 }
