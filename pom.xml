@@ -44,6 +44,12 @@
 			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.pitest</groupId>
+			<artifactId>pitest-parent</artifactId>
+			<version>1.8.0</version>
+			<type>pom</type>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -64,13 +70,25 @@
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
 				<version>1.8.0</version>
+
 				<configuration>
 					<mutators>
-						<mutator>ALL</mutator>
+						<mutator>STRONGER</mutator>
+						<mutator>NON_VOID_METHOD_CALLS</mutator>
+						<mutator>EXPERIMENTAL_ARGUMENT_PROPAGATION</mutator>
+						<mutator>EXPERIMENTAL_BIG_DECIMAL</mutator>
+						<mutator>INLINE_CONSTS</mutator>
 					</mutators>
+					<timestampedReports>
+						false
+					</timestampedReports>
 				</configuration>
+
 			</plugin>
+
 		</plugins>
+
 	</build>
+
 
 </project>

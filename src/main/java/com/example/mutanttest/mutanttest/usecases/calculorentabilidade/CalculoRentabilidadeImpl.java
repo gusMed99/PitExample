@@ -27,7 +27,7 @@ public class CalculoRentabilidadeImpl implements CalculoRentabilidade {
         final AliquotaIofRestResponse aliquotaIofRestResponse = this.aliquotaIofRest.obterAliquotaIof(AliquotaIofRestRequest.builder()
                 .quantidadeDiasOperacao(quantidadeDiasOperacao)
                 .build());
-        final AliquotaIrRestResponse aliquotaIrRestResponse = this.aliquotaIrRest.obterAlqiuotaImpostoRenda(AliquotaIrRestRequest.builder()
+        final AliquotaIrRestResponse aliquotaIrRestResponse = this.aliquotaIrRest.obterAliquotaImpostoRenda(AliquotaIrRestRequest.builder()
                 .quantidadeDiasOperacao(quantidadeDiasOperacao)
                 .build());
         final ValorCdiRestResponse valorCdiRestResponse = this.valorCdiRest.obterTaxaCdi();

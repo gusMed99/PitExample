@@ -7,5 +7,5 @@ import lombok.Getter;
 @Builder
 public class AliquotaIofRestRequest {
 
-    int quantidadeDiasOperacao;
+    private Integer quantidadeDiasOperacao;
 }

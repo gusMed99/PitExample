@@ -5,6 +5,6 @@ import com.example.mutanttest.mutanttest.usecases.calculorentabilidade.dto.Aliqu
 
 public interface AliquotaIrRest {
 
-    AliquotaIrRestResponse obterAlqiuotaImpostoRenda(AliquotaIrRestRequest aliquotaIrRestRequest);
+    AliquotaIrRestResponse obterAliquotaImpostoRenda(AliquotaIrRestRequest aliquotaIrRestRequest);
 
 }

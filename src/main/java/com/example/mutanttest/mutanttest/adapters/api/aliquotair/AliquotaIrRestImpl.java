@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class AliquotaIrRestImpl implements AliquotaIrRest {
 
     @Override
-    public AliquotaIrRestResponse obterAlqiuotaImpostoRenda(AliquotaIrRestRequest aliquotaIrRestRequest) {
+    public AliquotaIrRestResponse obterAliquotaImpostoRenda(AliquotaIrRestRequest aliquotaIrRestRequest) {
         final int quantidadeDiasOperacao = aliquotaIrRestRequest.getQuantidadeDiasOperacao();
         double aliquotaIrFinal;
         if(quantidadeDiasOperacao <= 180){

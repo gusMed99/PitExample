@@ -8,6 +8,7 @@ import com.example.mutanttest.mutanttest.usecases.calculorentabilidade.dto.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -35,10 +36,13 @@ public class CalculoRentabilidadeImplTest {
 
     @Test
     public void testObterCalculoRentabilidadeOkSemIof(){
+        final int quantidadeDiasOperacao = 365;
+        final LocalDate dataAplicacao = LocalDate.of(2022, Month.MAY, 1);
+        final LocalDate dataPrevisaoResgate = dataAplicacao.plusDays(quantidadeDiasOperacao);
         final CalculoRentabilidadeRequest request = CalculoRentabilidadeRequest.builder()
                 .valorInvestido(BigDecimal.valueOf(50000))
-                .dataAplicacao(LocalDate.of(2022, Month.MAY,1))
-                .dataPrevisaoResgate(LocalDate.of(2023,Month.MAY,1))
+                .dataAplicacao(dataAplicacao)
+                .dataPrevisaoResgate(dataPrevisaoResgate)
                 .percentualRendimentoCdi(BigDecimal.valueOf(100))
                 .build();
         final BigDecimal aliquotaIofEsperada = BigDecimal.ZERO;
@@ -49,13 +53,33 @@ public class CalculoRentabilidadeImplTest {
         this.executarChamadaIr(aliquotaIrEsperada);
         this.executarChamadaTaxaCdi(rendimentoDiarioCdiEsperado, rendimentoAnualCdiEsperado);
         final CalculoRentabilidadeResponse response = this.calculoRentabilidade.obterCalculoRentabilidade(request);
+
+        this.assertDadosChamadaIof(quantidadeDiasOperacao);
+        this.asserDadosChamadaIr(quantidadeDiasOperacao);
+
+        Mockito.verify(this.valorCdiRest).obterTaxaCdi();
+        
         Assert.assertEquals(BigDecimal.valueOf(56419.68), response.getValorBruto());
         Assert.assertEquals(BigDecimal.valueOf(55296.24), response.getValorLiquido());
         Assert.assertEquals(BigDecimal.valueOf(1123.44), response.getImpostoDeRenda());
-        //Assert.assertEquals(BigDecimal.ZERO, response.getIof());
-        Assert.assertEquals(aliquotaIrEsperada.multiply(BigDecimal.valueOf(100).setScale(2, RoundingMode.HALF_UP)), response.getAliquotaImpostoRendaAplicada());
-        Assert.assertEquals(aliquotaIofEsperada.multiply(BigDecimal.valueOf(100)), response.getAliquotaIofAplicada());
+        Assert.assertEquals(BigDecimal.ZERO.setScale(2), response.getIof());
+        Assert.assertEquals(aliquotaIrEsperada.multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP), response.getAliquotaImpostoRendaAplicada());
+        Assert.assertEquals(aliquotaIofEsperada.multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP), response.getAliquotaIofAplicada());
 
+    }
+
+    private void assertDadosChamadaIof(final Integer quantidadeDiasOperacaoEsperada){
+        final ArgumentCaptor<AliquotaIofRestRequest> aliquotaIofRestCaptor = ArgumentCaptor.forClass(AliquotaIofRestRequest.class);
+        Mockito.verify(this.aliquotaIofRest).obterAliquotaIof(aliquotaIofRestCaptor.capture());
+        final AliquotaIofRestRequest dadosChamadaMockIof = aliquotaIofRestCaptor.getValue();
+        Assert.assertEquals(quantidadeDiasOperacaoEsperada, dadosChamadaMockIof.getQuantidadeDiasOperacao());
+    }
+
+    private void asserDadosChamadaIr(final Integer quantidadeDiasOperacaoEsperada){
+        final ArgumentCaptor<AliquotaIrRestRequest> aliquotaIrRestCaptor = ArgumentCaptor.forClass(AliquotaIrRestRequest.class);
+        Mockito.verify(this.aliquotaIrRest).obterAliquotaImpostoRenda(aliquotaIrRestCaptor.capture());
+        final AliquotaIrRestRequest dadosChamadaMockIr = aliquotaIrRestCaptor.getValue();
+        Assert.assertEquals(quantidadeDiasOperacaoEsperada, dadosChamadaMockIr.getQuantidadeDiasOperacao());
     }
 
     private void executarChamadaIof(final BigDecimal aliquotaIofEsperada){
@@ -66,7 +90,7 @@ public class CalculoRentabilidadeImplTest {
     }
 
     private void executarChamadaIr(final BigDecimal aliquotaIrEsperada){
-        Mockito.when(this.aliquotaIrRest.obterAlqiuotaImpostoRenda(Mockito.any()))
+        Mockito.when(this.aliquotaIrRest.obterAliquotaImpostoRenda(Mockito.any()))
                 .thenReturn(AliquotaIrRestResponse.builder()
                         .valorAliquotaIr(aliquotaIrEsperada)
                         .build());
