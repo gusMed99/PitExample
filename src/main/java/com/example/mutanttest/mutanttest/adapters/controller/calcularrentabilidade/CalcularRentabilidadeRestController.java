@@ -33,7 +33,7 @@ public class CalcularRentabilidadeRestController {
                 .impostoDeRenda(calculoRentabilidadeResponse.getImpostoDeRenda())
                 .aliquotaImpostoRendaAplicada(calculoRentabilidadeResponse.getAliquotaImpostoRendaAplicada())
                 .iof(calculoRentabilidadeResponse.getIof())
-                .aliquotaIofAplicada(calculoRentabilidadeResponse.getAliquotaImpostoRendaAplicada())
+                .aliquotaIofAplicada(calculoRentabilidadeResponse.getAliquotaIofAplicada())
                 .build();
     }
 }

@@ -50,7 +50,7 @@ public class CalculoRentabilidadeImpl implements CalculoRentabilidade {
                 .impostoDeRenda(totalIr.setScale(PRECISAO_ARREDONDAMENTO, ROUNDING_MODE))
                 .aliquotaImpostoRendaAplicada(aliquotaIrRestResponse.getValorAliquotaIr().multiply(BigDecimal.valueOf(100)).setScale(PRECISAO_ARREDONDAMENTO,ROUNDING_MODE))
                 .iof(totalIof.setScale(PRECISAO_ARREDONDAMENTO,ROUNDING_MODE))
-                .aliquotaIofAplicada(aliquotaIofRestResponse.getAliquotaIof().setScale(PRECISAO_ARREDONDAMENTO,ROUNDING_MODE))
+                .aliquotaIofAplicada(aliquotaIofRestResponse.getAliquotaIof().multiply(BigDecimal.valueOf(100)).setScale(PRECISAO_ARREDONDAMENTO,ROUNDING_MODE))
                 .build();
     }
 
