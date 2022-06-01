@@ -164,6 +164,19 @@ public class CalculoRentabilidadeImplTest {
 
     }
 
+    @Test
+    public void testErroSaldoZerado(){
+        final int quantidadeDiasOperacao = 22;
+        final LocalDate dataAplicacao = LocalDate.of(2022, Month.MAY, 9);
+        final LocalDate dataPrevisaoResgate = dataAplicacao.plusDays(quantidadeDiasOperacao);
+        final CalculoRentabilidadeRequest request = CalculoRentabilidadeRequest.builder()
+                .valorInvestido(BigDecimal.ZERO)
+                .dataAplicacao(dataAplicacao)
+                .dataPrevisaoResgate(dataPrevisaoResgate)
+                .percentualRendimentoCdi(BigDecimal.valueOf(100))
+                .build();
+        Assert.assertThrows(DadosInvalidosException.class,() ->this.calculoRentabilidade.obterCalculoRentabilidade(request));
+    }
 
 
     @Test
@@ -179,19 +192,7 @@ public class CalculoRentabilidadeImplTest {
         Assert.assertThrows(DadosInvalidosException.class,() ->this.calculoRentabilidade.obterCalculoRentabilidade(request));
     }
 
-    @Test
-    public void testErroSaldoZerado(){
-        final int quantidadeDiasOperacao = 22;
-        final LocalDate dataAplicacao = LocalDate.of(2022, Month.MAY, 9);
-        final LocalDate dataPrevisaoResgate = dataAplicacao.plusDays(quantidadeDiasOperacao);
-        final CalculoRentabilidadeRequest request = CalculoRentabilidadeRequest.builder()
-                .valorInvestido(BigDecimal.ZERO)
-                .dataAplicacao(dataAplicacao)
-                .dataPrevisaoResgate(dataPrevisaoResgate)
-                .percentualRendimentoCdi(BigDecimal.valueOf(100))
-                .build();
-        Assert.assertThrows(DadosInvalidosException.class,() ->this.calculoRentabilidade.obterCalculoRentabilidade(request));
-    }
+
 
     @Test
     public void testObterCalculoRentabilidadeOkComVariacaoDePercentualRendimento(){

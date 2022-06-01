@@ -23,7 +23,7 @@ public class CalculoRentabilidadeImpl implements CalculoRentabilidade {
     @Override
     public CalculoRentabilidadeResponse obterCalculoRentabilidade(final CalculoRentabilidadeRequest request) {
         this.validarDadosRecebidos(request);
-        final int quantidadeDiasOperacao = (int) ChronoUnit.DAYS.between(request.getDataAplicacao(), request.getDataPrevisaoResgate());
+        final Integer quantidadeDiasOperacao = (int) ChronoUnit.DAYS.between(request.getDataAplicacao(), request.getDataPrevisaoResgate());
         final AliquotaIofRestResponse aliquotaIofRestResponse = this.aliquotaIofRest.obterAliquotaIof(AliquotaIofRestRequest.builder()
                 .quantidadeDiasOperacao(quantidadeDiasOperacao)
                 .build());
@@ -55,7 +55,7 @@ public class CalculoRentabilidadeImpl implements CalculoRentabilidade {
     }
 
     private BigDecimal calcularValorBruto(final BigDecimal valorInvestido, final BigDecimal rendimentoDiario,
-                                          final int quantidadeDiasOperacao){
+                                          final Integer quantidadeDiasOperacao){
 
         final BigDecimal resultadoPotencia = rendimentoDiario.add(BigDecimal.valueOf(1)).pow(quantidadeDiasOperacao);
         return valorInvestido.multiply(resultadoPotencia).setScale(PRECISAO_ARREDONDAMENTO, ROUNDING_MODE);
@@ -66,8 +66,8 @@ public class CalculoRentabilidadeImpl implements CalculoRentabilidade {
     }
 
     private BigDecimal calcularTotalIr(final BigDecimal rendimentoBruto, final BigDecimal totalIof, final BigDecimal aliquotaIr){
-        final BigDecimal burotDescontadoIof = rendimentoBruto.subtract(totalIof);
-        return burotDescontadoIof.multiply(aliquotaIr);
+        final BigDecimal brutoDescontadoIof = rendimentoBruto.subtract(totalIof);
+        return brutoDescontadoIof.multiply(aliquotaIr);
     }
 
     private void validarDadosRecebidos(CalculoRentabilidadeRequest calculoRentabilidadeRequest){
