@@ -1,0 +1,30 @@
+- final Integer quantidadeDiasOperacao
+	Remoção do between. Faz a mutação passar porque a variável de dias fica zerada e não há nenhum assert dos resultados
+	
+- .quantidadeDiasOperacao(quantidadeDiasOperacao).build());
+	- Ao remover a chamada do método build, a variável fica nula. E acaba resultando em nullPointer.
+	- O mesmo vale para o outro builder
+	
+- BigDecimal percentualRendimentoAjustado
+  - Falta de asserts
+  
+ - final BigDecimal rendimentoDiarioAjustado
+  - Falta de asserts e somente cenários em que o percentual é 100
+  
+ -final BigDecimal rendimentoBruto
+	- Falta de asserts
+	
+- CalculoRentabilidadeResponse.builder()
+  - Falta de asserts
+  
+- final BigDecimal resultadoPotencia
+	- Falta de asserts
+	
+- return valorInvestido.multiply
+	- Falta de asserts
+
+- final BigDecimal burotDescontadoIof
+	- Falta de asserts e ausência de cenários em que a aliquota de iof é maior que zero
+
+- if q valida entrada
+ - Falta de testes excessão
